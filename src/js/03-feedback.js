@@ -33,9 +33,6 @@ function formSubmit(event) {
     localStorage.removeItem('feedback-form-state');
 };
 
-formSubmit();
-
-
 function onLoad() {
     const email = loadFromLs('feedback-form-state');
     const message = loadFromLs('feedback-form-state');
