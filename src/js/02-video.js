@@ -17,7 +17,8 @@ function loadVideoFromLS() {
 }
 
 loadVideoFromLS();
-  player.on('timeupdate', throttle(function (seconds) {
+
+  player.on('timeupdate', throttle(function ({seconds}) {
   saveToLs('videoplayer-current-time', seconds);
 }, 1000));
 
