@@ -11,10 +11,11 @@ refs.form.addEventListener('submit', formSubmit);
 refs.form.addEventListener('input', throttle(formInput, 500));
 
 function formInput(event) {
-    const key = event.target.name;
-    const value = event.target.value;
+    const key = 'feedback-form-state';
+    const valueEmail = event.target.elements.email.value;
+    valueMessage = event.target.elements.message.value;
 
-    saveToLs(key, value);
+    saveToLs(key, [valueEmail, valueMessage]);
 };
 
 function formSubmit(event) {
@@ -24,7 +25,7 @@ function formSubmit(event) {
     const message = refs.form.elements.message.value;
 
     if (!email || !message) {
-        alert('Заповніть форму.')
+        alert('Заповніть формую')
     }
 
     const obj = {
@@ -35,13 +36,11 @@ function formSubmit(event) {
     console.log(obj);
     
     event.target.reset();
-    localStorage.removeItem('email');
-    localStorage.removeItem('message');
+    localStorage.removeItem('feedback-form-state');
 };
 
 function onLoad() {
-    const email = loadFromLs('email');
-    const message = loadFromLs('message');
+    const email = loadFromLs('feedback-form-state');
 
     refs.form.elements.email.value = email;
     refs.form.elements.message.value = message;
