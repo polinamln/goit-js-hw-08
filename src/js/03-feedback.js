@@ -1,21 +1,19 @@
 import { saveToLs, loadFromLs } from './helpers';
-var throttle = require('lodash.throttle');
+import throttle from 'lodash.throttle';
 
 const refs = {
     form: document.querySelector('.feedback-form'),
 };
 
-refs.form.addEventListener('input', formInput);
-refs.form.addEventListener('submit', formSubmit);
+const storage_key = "feedback-form-state";
+let formData = loadFromLs(storage_key) || {};
 
+refs.form.addEventListener('submit', formSubmit);
 refs.form.addEventListener('input', throttle(formInput, 500));
 
 function formInput(event) {
-    const key = 'feedback-form-state';
-    const valueEmail = event.target.elements.email.value;
-    valueMessage = event.target.elements.message.value;
-
-    saveToLs(key, [valueEmail, valueMessage]);
+    formData[event.target.name] = event.target.value;
+    saveToLs(storage_key, formData);
 };
 
 function formSubmit(event) {
@@ -25,7 +23,8 @@ function formSubmit(event) {
     const message = refs.form.elements.message.value;
 
     if (!email || !message) {
-        alert('Заповніть формую')
+        alert('Заповніть форму.')
+        return;
     }
 
     const obj = {
@@ -34,16 +33,17 @@ function formSubmit(event) {
     };
 
     console.log(obj);
-    
+
     event.target.reset();
-    localStorage.removeItem('feedback-form-state');
+    localStorage.removeItem(storage_key); 
 };
 
 function onLoad() {
-    const email = loadFromLs('feedback-form-state');
+    const email = formData.email;
+    const message = formData.message;
 
-    refs.form.elements.email.value = email;
-    refs.form.elements.message.value = message;
+    refs.form.elements.email.value = email || '';
+    refs.form.elements.message.value = message || '';
 };
 
 onLoad();
